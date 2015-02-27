@@ -8,7 +8,8 @@ public class Model {
 	
 	// blank constructor
 	public Model() {
-		
+		// Commit Testing, please ignore
+		// Still trying to figure out EGit
 	}
 
 	// function that runs the thread then prints the results it gets from the thread
