@@ -14,6 +14,7 @@ public class view extends JFrame {
     //initialize controls
     myPanel = new JPanel();
     searchField = new JTextField("Type to Search");
+    this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     
     //add controls to actual JFrame
     myPanel.add(searchField);
