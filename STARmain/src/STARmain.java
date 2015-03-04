@@ -5,9 +5,14 @@ public class STARmain  {
 	static view mySearchView = new view();
 	public static void main(String[] args) throws InterruptedException  {
 
-		// creates a model then does a search
+		// creates a model and controller
+		// also links the model, view, and controller together in the MCV style
 		Model model = new Model();
-		model.SearchFor("AA");
+		Controller controller = new Controller();
+		model.setController(controller);
+		mySearchView.setController(controller);
+		controller.setModel(model);
+		controller.setView(mySearchView);
 
 		//BEGIN VIEW
 		//check for a windowed environment
@@ -23,4 +28,6 @@ public class STARmain  {
 		}
 
 	}
+	
+	
 }

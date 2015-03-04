@@ -2,8 +2,9 @@ import java.util.ArrayList;
 
 
 public class Model {
-	String fileToFind;
 	ArrayList<String> results = new ArrayList<String>();
+	Controller controller;
+	Thread t1;
 	
 	// blank constructor
 	public Model() {
@@ -12,13 +13,14 @@ public class Model {
 	}
 
 	// function that runs the thread then prints the results it gets from the thread
-	public void SearchFor(String fileNameToFind) throws InterruptedException {
-		ArrayList<String> results2;
-		fileToFind = fileNameToFind;
-		MyRunnable run = new MyRunnable("AA");
-		Thread t1 = new Thread(run);
+	public ArrayList<String> SearchFor(String fileNameToFind) throws InterruptedException {
+		MyRunnable run = new MyRunnable(fileNameToFind);
+		while(!t1.isInterrupted() || !t1.isAlive()){
+			
+		}
+		t1 = new Thread(run);
 		t1.start();
-		t1.sleep(1000);
+		t1.sleep(5000);
 		
 		
 		results = run.getStuff();
@@ -26,8 +28,16 @@ public class Model {
 		for(int i = 0;i < results.size();i++) {
 			System.out.println(" " + results.get(i));
 		}
-		//System.out.println(" " + results.size());
-		//System.out.println(" " + results2.size());
-		
+		return results;
+	}
+	
+	public void interruptSearch() {
+		if(t1.isAlive()) {
+			t1.interrupt();
+		}
+	}
+	
+	public void setController(Controller c) {
+		controller = c;
 	}
 }

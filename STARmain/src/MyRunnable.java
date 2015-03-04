@@ -7,6 +7,7 @@ public class MyRunnable implements Runnable{
 	ArrayList<String> stuff = new ArrayList<String>();
 	ArrayList<String> dummyDemo = new ArrayList<String>();
 	
+	// 
 	public MyRunnable(String theFileToFind) {
 		// delete these when things start to work
 		// just a demo arraylist to show that something can work
@@ -19,10 +20,11 @@ public class MyRunnable implements Runnable{
 	// main heavy lifting method that likes a string to look for
 	//public void run(String theFile) {
 	public void run() {
-		System.out.println("I get here");
+		//System.out.println("I get here");
 		// when thread.stopThread is called, this while condition will break and end the thread process
 		while(!Thread.currentThread().isInterrupted() && finished == false) {
 			// go through the dummy arraylist and compare strings it has with the string it was passed
+			// replace these lines when real search is there
 			for(int i = 0;i < dummyDemo.size();i++) {
 				// a dummy comparison
 				if(theFile.compareTo(dummyDemo.get(i)) >= 0) {
