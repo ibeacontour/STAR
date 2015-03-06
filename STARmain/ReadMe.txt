@@ -1,0 +1,1 @@
+As of right now the software is fairly simple to use. Starting it like a typical java project (which may very depending on the IDE you use if any) will yeild you with a GUI which you can then type a search query into and hit enter, to see the command line search for and find files relevant to your query on your computer system.
