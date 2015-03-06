@@ -1,4 +1,5 @@
 import java.io.File;
+import java.nio.file.attribute.*;
 import java.util.ArrayList;
 
 public class MyRunnable implements Runnable{
@@ -71,7 +72,7 @@ public class MyRunnable implements Runnable{
 
 				for (File f:rootDir) {
 					if (f.getName().startsWith("Program Files") && f.isDirectory()) {
-						System.out.println("Found a Program Files directory");
+						System.out.println("Found a Program Files directory (Windows)");
 						ArrayList<File> temp = this.searchDir(f, search);
 						if (temp != null) {
 							for (File g:temp) {
@@ -79,7 +80,7 @@ public class MyRunnable implements Runnable{
 							}
 						}
 					} else if (f.getName().startsWith("Users") && f.isDirectory()) {
-						System.out.println("Found a Users directory");
+						System.out.println("Found a Users directory (Windows)");
 						ArrayList<File> temp = this.searchDir(f, search);
 						if (temp != null) {
 							for (File g:temp) {
@@ -90,7 +91,27 @@ public class MyRunnable implements Runnable{
 				}
 
 			} else if (osName.startsWith("Linux")) {
-				// Come up with some folder cases to check first 
+				// Come up with some folder cases to check first
+				for (File f:rootDir) {
+					if (f.getName().startsWith("home") && f.isDirectory()) {
+						System.out.println("Found a home directory (Linux)");
+						ArrayList<File> temp = this.searchDir(f, search);
+						if (temp != null) {
+							for (File g:temp) {
+								results.add(g);
+							}
+						}
+					} else if ( f.getName().startsWith("bin") && f.isDirectory()) {
+						System.out.println("Found a bin directory (Linux)");
+						ArrayList<File> temp = this.searchDir(f, search);
+						if (temp != null) {
+							for (File g:temp) {
+								results.add(g);
+							}
+						}
+					}
+				}
+				
 			}
 
 			// Print some Results
