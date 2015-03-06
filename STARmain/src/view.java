@@ -64,6 +64,12 @@ public class view extends JFrame implements KeyListener {
 		if (e.getKeyChar() == KeyEvent.VK_ENTER) {
 			search = searchField.getText();
 			System.out.println(search);
+			try {
+				controller.newSearch(search);
+			} catch (InterruptedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 		}
 
 	}

@@ -21,7 +21,7 @@ public class MyRunnable implements Runnable{
 	//public void run(String theFile) {
 	public void run() {
 		//System.out.println("I get here");
-		// when thread.stopThread is called, this while condition will break and end the thread process
+		// when thread is interrupted or the search is done, this while condition will break and end the thread process
 		while(!Thread.currentThread().isInterrupted() && finished == false) {
 			// go through the dummy arraylist and compare strings it has with the string it was passed
 			// replace these lines when real search is there
