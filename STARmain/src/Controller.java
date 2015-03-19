@@ -4,6 +4,7 @@ import java.util.ArrayList;
 public class Controller {
 	Model model;
 	view view;
+	ArrayList<String> results;
 	
 	public Controller() {
 		
@@ -17,14 +18,20 @@ public class Controller {
 		view = v;
 	}
 	
+	public ArrayList<String> getIntermediateSearchResults() {
+		return model.getResults();
+	}
+	
+	public void refreshSearchResults (ArrayList<String> rslt) {
+		// view.setResultBox(rslt);
+	}
+	
 	// the view will call this method whenever it wants to start a new search with a String it has
-	 public ArrayList<String> newSearch(String fileToSearch) throws InterruptedException {
-		 model.interruptSearch();
+	 public void newSearch(String fileToSearch) throws InterruptedException {
+		 if(model.t1.isAlive()) {
+			 model.interruptSearch();
+		 }
 		 model.SearchFor(fileToSearch);
-		 
-		return null;
-	 
-	 
 	 
 	 }
 	 
