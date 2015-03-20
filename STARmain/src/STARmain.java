@@ -1,19 +1,22 @@
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 
 import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 
-public class STARmain  {
+import org.jnativehook.*;
+import org.jnativehook.keyboard.*;
+
+public class STARmain implements NativeKeyListener {
 	static view mySearchView = new view();
 	static TrayIcon tIcon;
 	
-	public static void main(String[] args) throws InterruptedException  {
+	//used to track keys currently down and launch the window
+	static int state = 0;
+	
+	public static void main(String[] args) throws InterruptedException {
 
 		// creates a model and controller
 		// also links the model, view, and controller together in the MCV style
@@ -85,13 +88,50 @@ public class STARmain  {
 			}
 			
 			//TODO: add keyboard triggers
-			//show search window
-			mySearchView.setVisible(true);
+			try {
+	            GlobalScreen.registerNativeHook();
+	        }
+	        catch (NativeHookException ex) {
+	            System.err.println("There was a problem registering the native hook.");
+	            System.err.println(ex.getMessage());
 
+	            System.exit(1);
+	        }
 
+	        GlobalScreen.addNativeKeyListener(new STARmain());
 
 		}
 
+	}
+
+	@Override
+	public void nativeKeyPressed(NativeKeyEvent arg0) {
+		// TODO Auto-generated method stub
+		if (arg0.getKeyCode() == NativeKeyEvent.VC_SPACE) {
+			state++;
+		} else if (arg0.getKeyCode() == NativeKeyEvent.VC_CONTROL_L) {
+			state++;
+		}
+		
+		if (state > 1) {
+			mySearchView.setVisible(true);
+		}
+	}
+
+	@Override
+	public void nativeKeyReleased(NativeKeyEvent arg0) {
+		// TODO Auto-generated method stub
+		if (arg0.getKeyCode() == NativeKeyEvent.VC_SPACE) {
+			state--;
+		} else if (arg0.getKeyCode() == NativeKeyEvent.VC_CONTROL_L) {
+			state--;
+		}
+	}
+
+	@Override
+	public void nativeKeyTyped(NativeKeyEvent arg0) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 	
