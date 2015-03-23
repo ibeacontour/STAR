@@ -1,22 +1,20 @@
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 
 import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 
-import org.jnativehook.*;
-import org.jnativehook.keyboard.*;
-
-public class STARmain implements NativeKeyListener {
+public class STARmain  {
 	static view mySearchView = new view();
 	static TrayIcon tIcon;
 	
-	//used to track keys currently down and launch the window
-	static int state = 0;
-	
-	public static void main(String[] args) throws InterruptedException {
+	public static void main(String[] args) throws InterruptedException  {
+
 		// creates a model and controller
 		// also links the model, view, and controller together in the MCV style
 		Model model = new Model();
@@ -51,7 +49,7 @@ public class STARmain implements NativeKeyListener {
 						public void actionPerformed(ActionEvent e) {
 							// TODO Auto-generated method stub
 							JOptionPane.showMessageDialog(null, "STARsearch" + System.lineSeparator() 
-									+ "©2015 S.T.A.R. Developement Team" + System.lineSeparator() 
+									+ "Â©2015 S.T.A.R. Developement Team" + System.lineSeparator() 
 									+ System.lineSeparator() 
 									+ "Built as a project for CS3141 \"Team Software Project\" at Michigan Technological University." +System.lineSeparator() 
 									+ "This simple program allows you to type some inputs into its popup search box and will promptly search for it."
@@ -87,50 +85,13 @@ public class STARmain implements NativeKeyListener {
 			}
 			
 			//TODO: add keyboard triggers
-			try {
-	            GlobalScreen.registerNativeHook();
-	        }
-	        catch (NativeHookException ex) {
-	            System.err.println("There was a problem registering the native hook.");
-	            System.err.println(ex.getMessage());
-
-	            System.exit(1);
-	        }
-			
-	        GlobalScreen.addNativeKeyListener(new STARmain());
-
-		}
-
-	}
-
-	@Override
-	public void nativeKeyPressed(NativeKeyEvent arg0) {
-		// TODO Auto-generated method stub
-		if (arg0.getKeyCode() == NativeKeyEvent.VC_SPACE) {
-			state++;
-		} else if (arg0.getKeyCode() == NativeKeyEvent.VC_CONTROL_L) {
-			state++;
-		}
-		
-		if (state > 1) {
+			//show search window
 			mySearchView.setVisible(true);
-		}
-	}
 
-	@Override
-	public void nativeKeyReleased(NativeKeyEvent arg0) {
-		// TODO Auto-generated method stub
-		if (arg0.getKeyCode() == NativeKeyEvent.VC_SPACE) {
-			state--;
-		} else if (arg0.getKeyCode() == NativeKeyEvent.VC_CONTROL_L) {
-			state--;
-		}
-	}
 
-	@Override
-	public void nativeKeyTyped(NativeKeyEvent arg0) {
-		// TODO Auto-generated method stub
-		
+
+		}
+
 	}
 	
 	

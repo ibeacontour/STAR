@@ -6,13 +6,15 @@ public class MyRunnable implements Runnable{
 	volatile boolean finished = false;
 	volatile boolean running = true;
 	String theFile;
-	ArrayList<String> stuff = new ArrayList<String>();
+	Model model;
+	ArrayList<File> stuff = new ArrayList<File>();
 
 	// 
-	public MyRunnable(String theFileToFind) {
+	public MyRunnable(String theFileToFind, Model theModel) {
 		// delete these when things start to work
 		// just a demo arraylist to show that something can work
 		theFile = theFileToFind;
+		model = theModel;
 	}
 
 	// main heavy lifting method that likes a string to look for
@@ -131,15 +133,17 @@ public class MyRunnable implements Runnable{
 				return;
 			}
 			System.out.println("Found a match in: " + f.getAbsolutePath());
-			stuff.add(f.getAbsolutePath());
+			stuff.add(f);
 		}
-
+		
+		model.setResults(stuff);
+		
 
 
 	}
 
 	// getter function
-	public ArrayList<String> getStuff() {
+	public ArrayList<File> getStuff() {
 		return stuff;
 	}
 

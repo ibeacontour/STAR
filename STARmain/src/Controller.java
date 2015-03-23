@@ -1,5 +1,5 @@
-import java.io.File;
 import java.util.ArrayList;
+import java.io.File;
 
 
 public class Controller {
@@ -19,12 +19,13 @@ public class Controller {
 		view = v;
 	}
 	
-	public ArrayList<String> getIntermediateSearchResults() {
+	public ArrayList<File> getIntermediateSearchResults() {
 		return model.getResults();
 	}
 	
-	public void refreshSearchResults (ArrayList<String> rslt) {
+	public void refreshSearchResults (ArrayList<File> rslt) {
 		// view.setResultBox(rslt);
+		view.setResults(rslt);
 	}
 	
 	// the view will call this method whenever it wants to start a new search with a String it has
@@ -36,8 +37,5 @@ public class Controller {
 	 
 	 }
 	 
-	 //the model will call this method whenever it wants to return results to the view
-	 public void returnSearch(ArrayList<File> results) {
-		 view.setResults(results);
-	 }
+
 }
