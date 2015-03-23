@@ -2,6 +2,8 @@ import javax.swing.*;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.io.File;
+import java.util.ArrayList;
 
 public class view extends JFrame implements KeyListener {
 	private static final long serialVersionUID = -4531812284827958061L;
@@ -11,8 +13,8 @@ public class view extends JFrame implements KeyListener {
 	private Controller controller;
 	
 	//TODO: create custom type for results, no way string will be sufficient
-	private JList<String> results;
-	private DefaultListModel<String> listModel;
+	private JList<File> results;
+	private DefaultListModel<File> listModel;
 	
 	//NOTE: this is a hack for the code below so that we have access to our JFrame since
 	//keyword "this" in the below context refers to the component adapter and not THIS as
@@ -80,17 +82,17 @@ public class view extends JFrame implements KeyListener {
 		
 		
 		//Results Box
-		listModel = new DefaultListModel<String>();
-		results = new JList<String>(listModel);
+		listModel = new DefaultListModel<File>();
+		results = new JList<File>(listModel);
 		c.gridx = 0;
 		c.gridy = 1;
 		c.weighty = 1;
 		c.gridheight = 3;
 		
 		//dummy data
-		listModel.addElement("The Fall of Hyperion");
-		listModel.addElement("The Tempest");
-		listModel.addElement("Othello");
+		//listModel.addElement("The Fall of Hyperion");
+		//listModel.addElement("The Tempest");
+		//listModel.addElement("Othello");
 		
 		this.add(results, c);
   }
@@ -129,13 +131,13 @@ public class view extends JFrame implements KeyListener {
 
 	}
 	
-	public void setResults(String[] results){
+	public void setResults(ArrayList<File> results){
 		//clear the list
 		listModel.clear();
 		
 		//add all the new results to the list
-		for (String result : results) {
-			listModel.addElement(result);
+		for (int i = 0; i < results.size(); i++) {
+			listModel.addElement(results.get(i));
 		}
 	}
   

@@ -17,7 +17,6 @@ public class STARmain implements NativeKeyListener {
 	static int state = 0;
 	
 	public static void main(String[] args) throws InterruptedException {
-
 		// creates a model and controller
 		// also links the model, view, and controller together in the MCV style
 		Model model = new Model();
@@ -97,7 +96,7 @@ public class STARmain implements NativeKeyListener {
 
 	            System.exit(1);
 	        }
-
+			
 	        GlobalScreen.addNativeKeyListener(new STARmain());
 
 		}

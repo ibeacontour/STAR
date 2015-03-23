@@ -1,3 +1,4 @@
+import java.io.File;
 import java.util.ArrayList;
 
 
@@ -35,5 +36,8 @@ public class Controller {
 	 
 	 }
 	 
-
+	 //the model will call this method whenever it wants to return results to the view
+	 public void returnSearch(ArrayList<File> results) {
+		 view.setResults(results);
+	 }
 }
