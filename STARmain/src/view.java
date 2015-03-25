@@ -9,11 +9,9 @@ public class view extends JFrame implements KeyListener {
 	private JTextField searchField;
 	private String search;
 	private Controller controller;
-	
 	//TODO: create custom type for results, no way string will be sufficient
 	private JList<String> results;
-	private DefaultListModel<String> listModel;
-	
+  
 	//NOTE: this is a hack for the code below so that we have access to our JFrame since
 	//keyword "this" in the below context refers to the component adapter and not THIS as
 	//in our frame itself. Bad practice, please advise.
@@ -24,11 +22,6 @@ public class view extends JFrame implements KeyListener {
 	  public void componentHidden(ComponentEvent e) 
 	  {
 	      /* code run when component hidden*/
-		  //clear the search field
-		  searchField.setText("");
-		  
-		  //clear the results
-		  listModel.clear();
 	  }
 	  public void componentShown(ComponentEvent e) {
 	    /* code run when component shown */
@@ -44,6 +37,7 @@ public class view extends JFrame implements KeyListener {
     // TODO: check for headless environment, add multiple desktop handling
     
     //Windows Configuration Parameters
+    this.setDefaultCloseOperation(EXIT_ON_CLOSE);
     this.addComponentListener(myComponentAdapter);
     
     //Borderless Window
@@ -80,7 +74,7 @@ public class view extends JFrame implements KeyListener {
 		
 		
 		//Results Box
-		listModel = new DefaultListModel<String>();
+		DefaultListModel<String> listModel = new DefaultListModel<String>();
 		results = new JList<String>(listModel);
 		c.gridx = 0;
 		c.gridy = 1;
@@ -100,11 +94,9 @@ public class view extends JFrame implements KeyListener {
 	}
 	
 	@Override
-	public void keyPressed(KeyEvent e) {
+	public void keyPressed(KeyEvent arg0) {
 		// TODO Auto-generated method stub
-		if (e.getKeyChar() == KeyEvent.VK_ESCAPE) {
-			this.setVisible(false);
-		}
+
 	}
 
 	@Override
@@ -127,16 +119,6 @@ public class view extends JFrame implements KeyListener {
 			}
 		}
 
-	}
-	
-	public void setResults(String[] results){
-		//clear the list
-		listModel.clear();
-		
-		//add all the new results to the list
-		for (String result : results) {
-			listModel.addElement(result);
-		}
 	}
   
 }
