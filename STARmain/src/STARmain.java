@@ -5,13 +5,22 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 
-public class STARmain  {
+import org.jnativehook.GlobalScreen;
+import org.jnativehook.NativeHookException;
+import org.jnativehook.keyboard.NativeKeyEvent;
+import org.jnativehook.keyboard.NativeKeyListener;
+
+public class STARmain implements NativeKeyListener {
 	static view mySearchView = new view();
 	static TrayIcon tIcon;
+	
+	static int state = 0;
 	
 	public static void main(String[] args) throws InterruptedException  {
 
@@ -60,7 +69,7 @@ public class STARmain  {
 					MenuItem exitItem = new MenuItem("Exit");
 					exitItem.addActionListener(new ActionListener() {
 						
-						@Override
+						@Override  
 						public void actionPerformed(ActionEvent e) {
 							// TODO Auto-generated method stub
 							System.exit(0);
@@ -74,6 +83,13 @@ public class STARmain  {
 					//add icon to system tray
 					SystemTray.getSystemTray().add(tIcon);
 					
+					//register global hook for key listener
+					GlobalScreen.registerNativeHook();
+					GlobalScreen.addNativeKeyListener(new STARmain());
+					
+					//disable verbose output
+					Logger logger = Logger.getLogger(GlobalScreen.class.getPackage().getName());
+					logger.setLevel(Level.OFF);
 					
 				} catch (AWTException e) {
 					//create a popup error
@@ -81,17 +97,59 @@ public class STARmain  {
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
+				} catch (NativeHookException e) {
+					e.printStackTrace();
 				}
 			}
 			
-			//TODO: add keyboard triggers
-			//show search window
-			mySearchView.setVisible(true);
-
-
-
+			//on exit
+			Runtime.getRuntime().addShutdownHook(new Thread() {
+				@Override
+				public void run()
+				{
+					//remove native hook
+					try {
+						GlobalScreen.unregisterNativeHook();
+					} catch (NativeHookException e) {
+						e.printStackTrace();
+					}
+				}
+			});
 		}
 
+	}
+
+	@Override
+	public void nativeKeyPressed(NativeKeyEvent arg0) {
+		//implement state as per detected key
+		if (arg0.getKeyCode() == NativeKeyEvent.VC_CONTROL_L) {
+			state++;
+		} else if (arg0.getKeyCode() == NativeKeyEvent.VC_SPACE) {
+			state++;
+		}
+		
+		//if both keys are down we will be in state 2 and show the form
+		if (state > 1) {
+			mySearchView.setVisible(true);
+		}
+	}
+
+	@Override
+	public void nativeKeyReleased(NativeKeyEvent arg0) {
+		//decrement states as keys are released
+		if (arg0.getKeyCode() == NativeKeyEvent.VC_CONTROL_L) {
+			state--;
+		} else if (arg0.getKeyCode() == NativeKeyEvent.VC_SPACE) {
+			state--;
+		}
+		
+		//don't hide the form, it does it itself when it has focus and escape is hit		
+	}
+
+	@Override
+	public void nativeKeyTyped(NativeKeyEvent arg0) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 	

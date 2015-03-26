@@ -5,7 +5,7 @@ import java.awt.event.*;
 import java.io.File;
 import java.util.ArrayList;
 
-public class view extends JFrame implements KeyListener, MouseListener {
+public class view extends JFrame implements KeyListener {
 	private static final long serialVersionUID = -4531812284827958061L;
 	// create the controls to be placed on the form
 	private JTextField searchField;
@@ -95,6 +95,26 @@ public class view extends JFrame implements KeyListener, MouseListener {
 		//listModel.addElement("Othello");
 		
 		this.add(results, c);
+		
+		
+		//for the JLIST
+		results.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e){
+				JList eList = (JList)e.getSource();
+				if (e.getClickCount() == 2) {
+					//to make sure we don't double click outside the bounds of the last element
+					Rectangle r = eList.getCellBounds(0, eList.getLastVisibleIndex());
+					if ((r != null) && (r.contains(e.getPoint()))){
+					//on double click
+					int index = eList.locationToIndex(e.getPoint());
+					
+					//send index on
+					System.out.println(eList.getModel().getElementAt(index));
+					}
+				} 
+			}
+		});
   }
   
   public void setController(Controller c) {
@@ -131,44 +151,16 @@ public class view extends JFrame implements KeyListener, MouseListener {
 
 	}
 	
-	public void setResults(ArrayList<File> results){
+	public void setResults(ArrayList<File> rslts){
 		//clear the list
 		listModel.clear();
 		
 		//add all the new results to the list
-		for (int i = 0; i < results.size(); i++) {
-			listModel.addElement(results.get(i));
+		for (int i = 0; i < rslts.size(); i++) {
+			listModel.addElement(rslts.get(i));
 		}
-	}
-
-	@Override
-	public void mouseClicked(MouseEvent arg0) {
-		File lis = listModel.get(results.getSelectedIndex());
-		System.out.println(lis.toString());
-	}
-
-	@Override
-	public void mouseEntered(MouseEvent arg0) {
-		// TODO Auto-generated method stub
 		
-	}
-
-	@Override
-	public void mouseExited(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mousePressed(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mouseReleased(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
+		results = new JList<File>(listModel);
 	}
   
 }
