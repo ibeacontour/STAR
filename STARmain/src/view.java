@@ -95,6 +95,26 @@ public class view extends JFrame implements KeyListener {
 		//listModel.addElement("Othello");
 
 		this.add(results, c);
+		
+		
+		//for the JLIST
+		results.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e){
+				JList eList = (JList)e.getSource();
+				if (e.getClickCount() == 2) {
+					//to make sure we don't double click outside the bounds of the last element
+					Rectangle r = eList.getCellBounds(0, eList.getLastVisibleIndex());
+					if ((r != null) && (r.contains(e.getPoint()))){
+					//on double click
+					int index = eList.locationToIndex(e.getPoint());
+					
+					//send index on
+					System.out.println(eList.getModel().getElementAt(index));
+					}
+				} 
+			}
+		});
 	}
 
 	public void setController(Controller c) {
@@ -131,14 +151,16 @@ public class view extends JFrame implements KeyListener {
 
 	}
 
-	public void setResults(ArrayList<File> results){
+	public void setResults(ArrayList<File> rslts){
 		//clear the list
 		listModel.clear();
-
+		
 		//add all the new results to the list
-		for (int i = 0; i < results.size(); i++) {
-			listModel.addElement(results.get(i));
+		for (int i = 0; i < rslts.size(); i++) {
+			listModel.addElement(rslts.get(i));
 		}
+		
+		results = new JList<File>(listModel);
 	}
 
 }

@@ -46,7 +46,7 @@ public class Model {
 	
 	public void setResults(ArrayList<File> newResults) {
 		results = newResults;
-		//controller.refreshSearchResults(results);
+		controller.refreshSearchResults(results);
 	}
 	
 	public void genericExecuteFile(File f) throws InterruptedException {
