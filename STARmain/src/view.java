@@ -101,7 +101,7 @@ public class view extends JFrame implements KeyListener {
 		results.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e){
-				JList eList = (JList)e.getSource();
+				JList eList = (JList)e.getSource(); 
 				if (e.getClickCount() == 2) {
 					//to make sure we don't double click outside the bounds of the last element
 					Rectangle r = eList.getCellBounds(0, eList.getLastVisibleIndex());

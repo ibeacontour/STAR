@@ -22,12 +22,14 @@ public class Model {
 		System.out.println("I started a new search");
 		
 		// run the search
+		// set the priority to low so it doesn't starve other more time sensitive operations
 		t1 = new Thread(run);
 		t1.setPriority(Thread.MIN_PRIORITY);
 		t1.start();
 
 	}
 
+	// sets a flag in the runnable that stops it (not instantaneous)
 	public void interruptSearch() throws InterruptedException {
 		if(t1.isAlive()) {
 			System.out.println("stopping");
@@ -51,12 +53,15 @@ public class Model {
 	
 	public void genericExecuteFile(File f) throws InterruptedException {
 		
+		// check to see if the file is 'executable'
 		if(f == null || !f.canExecute()) {
 			System.out.println("Can not execute: " + f.getName());
 			return;
 		}
 		
+		// using runtime and exec's in java requires use of a process
 		Process p;
+		// the 'canExecute' check is insuffient, so a try/catch block is needed
 		try {
 			p = Runtime.getRuntime().exec(f.getAbsolutePath());
 			p.waitFor();

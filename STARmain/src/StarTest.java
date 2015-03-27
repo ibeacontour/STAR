@@ -21,6 +21,7 @@ public class StarTest {
 	@Test
 	  public void basicTestSearch() throws FileNotFoundException, UnsupportedEncodingException, InterruptedException {
 	    
+		// use printer writers to make a couple test files
 	    PrintWriter writer = new PrintWriter(f1, "UTF-8");
 	    writer.println("The first line");
 	    writer.println("The second line");
@@ -32,6 +33,7 @@ public class StarTest {
 	    writer2.close();
 	    
 	    // simple file search
+	    // join pauses program to wait until it's done for accurate results
 	    model.SearchFor(f1);
 	    model.t1.join();
 	    
@@ -40,6 +42,7 @@ public class StarTest {
 	    // test to see if the search was able to find ANYTHING
 	    assertFalse("search should find something", stuff.isEmpty());
 	    
+	    // search for the exact file
 	    for(File file:stuff) {
 	    	if (file.getName().compareTo(f1) == 0) {
 	    		foundExactFile = true;
@@ -55,7 +58,7 @@ public class StarTest {
 	@Test
 	  public void advancedTestSearch() throws FileNotFoundException, UnsupportedEncodingException, InterruptedException {
 	
-
+		// use printer writers to make a couple test files
 	    PrintWriter writer = new PrintWriter(f1, "UTF-8");
 	    writer.println("The first line");
 	    writer.println("The second line");
@@ -67,12 +70,14 @@ public class StarTest {
 	    writer2.close();
 		
 		// interupted search
+	    // start one search then check to see if it tosses it when next one starts
 		model.SearchFor(f1);
 		model.SearchFor(f2);
 		model.t1.join();
 		
 		stuff = model.getResults();
 		
+		// look to see if it found the second searched file, not first
 		for(File file:stuff) {
 	    	if (file.getName().compareTo(f2) == 0) {
 	    		foundExactFile = true;
@@ -90,10 +95,13 @@ public class StarTest {
 		model.t1.join();
 		stuff = model.getResults();
 		
+		// start trying to executing all possible eclipse executables
 		for(File file:stuff) {
 			model.genericExecuteFile(file.getAbsoluteFile());
-			//System.out.println(file.getAbsolutePath());
+			
 		}
+		
+		// if programs come up, it works!
 		
 		
 		
