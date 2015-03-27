@@ -7,7 +7,7 @@ import javax.swing.SwingUtilities;
 public class Controller {
 	Model model;
 	view view;
-	ArrayList<String> results;
+	ArrayList<File> results;
 	
 	public Controller() {
 		
@@ -26,6 +26,7 @@ public class Controller {
 	}
 	
 	public void refreshSearchResults (ArrayList<File> rslt) {
+		results = rslt;
 		view.setResults(rslt);
 	}
 	
