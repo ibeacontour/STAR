@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.io.File;
+import java.io.IOException;
 
 
 public class Model {
@@ -45,6 +46,24 @@ public class Model {
 	
 	public void setResults(ArrayList<File> newResults) {
 		results = newResults;
+		//controller.refreshSearchResults(results);
+	}
+	
+	public void genericExecuteFile(File f) throws InterruptedException {
+		
+		if(f == null || !f.canExecute()) {
+			System.out.println("Can not execute: " + f.getName());
+			return;
+		}
+		
+		Process p;
+		try {
+			p = Runtime.getRuntime().exec(f.getAbsolutePath());
+			p.waitFor();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			System.out.println("invalid file to run: " + f.getName());
+		}
 		
 	}
 	

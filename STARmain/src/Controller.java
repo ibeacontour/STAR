@@ -5,7 +5,7 @@ import java.io.File;
 public class Controller {
 	Model model;
 	view view;
-	ArrayList<String> results;
+	ArrayList<File> results;
 	
 	public Controller() {
 		
@@ -24,7 +24,7 @@ public class Controller {
 	}
 	
 	public void refreshSearchResults (ArrayList<File> rslt) {
-		// view.setResultBox(rslt);
+		results = rslt;
 		view.setResults(rslt);
 	}
 	

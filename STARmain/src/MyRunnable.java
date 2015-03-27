@@ -136,7 +136,7 @@ public class MyRunnable implements Runnable{
 			stuff.add(f);
 		}
 		
-		model.setResults(stuff);
+		model.setResults(results);
 		
 
 
