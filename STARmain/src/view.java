@@ -13,8 +13,8 @@ public class view extends JFrame implements KeyListener {
 	private Controller controller;
 	
 	//TODO: create custom type for results, no way string will be sufficient
-	private JList<File> results;
-	private DefaultListModel<File> listModel;
+	private static JList<File> results;
+	private static DefaultListModel<File> listModel;
 	
 	//NOTE: this is a hack for the code below so that we have access to our JFrame since
 	//keyword "this" in the below context refers to the component adapter and not THIS as
@@ -90,7 +90,7 @@ public class view extends JFrame implements KeyListener {
 		c.gridheight = 3;
 		
 		//dummy data
-		//listModel.addElement("The Fall of Hyperion");
+		//listModel.addElement();
 		//listModel.addElement("The Tempest");
 		//listModel.addElement("Othello");
 		
@@ -101,7 +101,8 @@ public class view extends JFrame implements KeyListener {
 		results.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e){
-				JList eList = (JList)e.getSource();
+				@SuppressWarnings("unchecked")
+				JList<File> eList = (JList<File>)e.getSource();
 				if (e.getClickCount() == 2) {
 					//to make sure we don't double click outside the bounds of the last element
 					Rectangle r = eList.getCellBounds(0, eList.getLastVisibleIndex());
@@ -151,16 +152,33 @@ public class view extends JFrame implements KeyListener {
 
 	}
 	
-	public void setResults(ArrayList<File> rslts){
-		//clear the list
-		listModel.clear();
+	public static void setResults(ArrayList<File> rslts){
 		
-		//add all the new results to the list
-		for (int i = 0; i < rslts.size(); i++) {
-			listModel.addElement(rslts.get(i));
+		//used to pass ArrayList<File> Parameter to a runnable
+		class ParameterizedRunnable implements Runnable {
+			ArrayList<File> newFiles;
+			
+			ParameterizedRunnable(ArrayList<File> files) { newFiles = files;}
+
+			public void run() {
+				//basically our old view method neatly wrapped up
+				
+				//clear the list
+				listModel.clear();
+				
+				//add all the new results to the list
+				for (int i = 0; i < newFiles.size(); i++) {
+					listModel.addElement(newFiles.get(i));
+				}
+				
+				results.setModel(listModel);
+				//results.
+				//results = new JList<File>(listModel);
+			}
 		}
 		
-		results = new JList<File>(listModel);
+		//call on UI thread
+		SwingUtilities.invokeLater(new ParameterizedRunnable(rslts));
 	}
   
 }

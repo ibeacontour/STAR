@@ -1,6 +1,8 @@
 import java.util.ArrayList;
 import java.io.File;
 
+import javax.swing.SwingUtilities;
+
 
 public class Controller {
 	Model model;
@@ -24,7 +26,6 @@ public class Controller {
 	}
 	
 	public void refreshSearchResults (ArrayList<File> rslt) {
-		// view.setResultBox(rslt);
 		view.setResults(rslt);
 	}
 	

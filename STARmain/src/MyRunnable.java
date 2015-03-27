@@ -79,7 +79,7 @@ public class MyRunnable implements Runnable{
 				if(finished == true) {
 					return;
 				}
-				if (f.getName().startsWith("Program Files") && f.isDirectory()) {
+				/*if (f.getName().startsWith("Program Files") && f.isDirectory()) {
 					//System.out.println("Found a Program Files directory (Windows)");
 					ArrayList<File> temp = this.searchDir(f, search);
 					if (temp != null) {
@@ -87,7 +87,7 @@ public class MyRunnable implements Runnable{
 							results.add(g);
 						}
 					}
-				} else if (f.getName().startsWith("Users") && f.isDirectory()) {
+				} else*/ if (f.getName().startsWith("Users") && f.isDirectory()) {
 					//System.out.println("Found a Users directory (Windows)");
 					ArrayList<File> temp = this.searchDir(f, search);
 					if (temp != null) {
