@@ -31,13 +31,20 @@ public class Controller {
 	}
 	
 	// the view will call this method whenever it wants to start a new search with a String it has
-	 public void newSearch(String fileToSearch) throws InterruptedException {
-		 if(model.t1.isAlive()) {
-			 model.interruptSearch();
-		 }
-		 model.SearchFor(fileToSearch);
+	public void newSearch(String fileToSearch) throws InterruptedException {
+	  if(model.t1.isAlive()) {
+	    model.interruptSearch();
+	  }
+	  
+	  model.SearchFor(fileToSearch);
+	}
 	 
-	 }
-	 
-
+	public void execute(File fileToExecute) {
+		try {
+			model.genericExecuteFile(fileToExecute);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 }

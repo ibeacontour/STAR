@@ -111,7 +111,8 @@ public class view extends JFrame implements KeyListener {
 					int index = eList.locationToIndex(e.getPoint());
 					
 					//send index on
-					System.out.println(eList.getModel().getElementAt(index));
+					//System.out.println(eList.getModel().getElementAt(index));
+					controller.execute(eList.getModel().getElementAt(index));
 					}
 				} 
 			}
@@ -139,6 +140,9 @@ public class view extends JFrame implements KeyListener {
 	@Override
 	public void keyTyped(KeyEvent e) {
 		if (e.getKeyChar() == KeyEvent.VK_ENTER) {
+			//clear the list view
+			listModel.clear();
+			
 			search = searchField.getText();
 			System.out.println(search);
 

@@ -99,7 +99,7 @@ public class STARmain implements NativeKeyListener {
 			}
 			
 			//on exit
-			/*Runtime.getRuntime().addShutdownHook(new Thread() {
+			Runtime.getRuntime().addShutdownHook(new Thread() {
 				@Override
 				public void run()
 				{
@@ -110,7 +110,7 @@ public class STARmain implements NativeKeyListener {
 						e.printStackTrace();
 					}
 				}
-			});*/
+			});
 		}
 
 	}
