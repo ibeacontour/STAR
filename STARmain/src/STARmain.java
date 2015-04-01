@@ -59,7 +59,9 @@ public class STARmain implements NativeKeyListener {
 									+ "©2015 S.T.A.R. Developement Team" + System.lineSeparator() 
 									+ System.lineSeparator() 
 									+ "Built as a project for CS3141 \"Team Software Project\" at Michigan Technological University." +System.lineSeparator() 
-									+ "This simple program allows you to type some inputs into its popup search box and will promptly search for it."
+									+ "This simple program allows you to type some inputs into its popup search box and will promptly search for it." + System.lineSeparator()
+									+ System.lineSeparator()
+									+ "Icons made by Freepik from www.flaticon.com" + System.lineSeparator()
 									, "About!", JOptionPane.INFORMATION_MESSAGE);
 						}
 					});
@@ -141,6 +143,9 @@ public class STARmain implements NativeKeyListener {
 			state--;
 		}
 		
+		if (state < 0)  {
+			state = 0;
+		}
 		//don't hide the form, it does it itself when it has focus and escape is hit		
 	}
 

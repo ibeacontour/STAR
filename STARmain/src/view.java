@@ -15,10 +15,13 @@ public class view extends JFrame implements KeyListener {
 	private JTextField searchField;
 	private String search;
 	private Controller controller;
+	private static JLabel imageLabel;
 
 	//TODO: create custom type for results, no way string will be sufficient
 	private static JList<File> results;
 	private static DefaultListModel<File> listModel;
+	private static ImageIcon sIcon;
+	private static ImageIcon wIcon;
 	
 	//NOTE: this is a hack for the code below so that we have access to our JFrame since
 	//keyword "this" in the below context refers to the component adapter and not THIS as
@@ -58,7 +61,7 @@ public class view extends JFrame implements KeyListener {
 		//set default size to some same ratio of the current desktops size
 		Dimension screenDims = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
 		this.setSize(screenDims.width/3, screenDims.height/5);
-
+		this.getContentPane().setBackground(Color.DARK_GRAY);
 
 		//initialize layout
 		GridBagLayout gridBag = new GridBagLayout();
@@ -70,11 +73,21 @@ public class view extends JFrame implements KeyListener {
 		//Search Icon
 		//create an image
 		try {
+			//load searching image
 			ClassLoader cLoad = Thread.currentThread().getContextClassLoader();
-			BufferedImage tImage = ImageIO.read(cLoad.getResource("icon.png"));
-			int tIconWidth = this.getHeight() / 5;
-			ImageIcon iIcon = new ImageIcon(tImage.getScaledInstance(tIconWidth, -1, Image.SCALE_SMOOTH), "STARsearch");
-			JLabel imageLabel = new JLabel(iIcon);
+			BufferedImage sImage = ImageIO.read(cLoad.getResource("Search.png"));
+			int sIconWidth = this.getHeight() / 5;
+			sIcon = new ImageIcon(sImage.getScaledInstance(sIconWidth, -1, Image.SCALE_SMOOTH), "STARsearch");
+			
+			//load waiting imageSear
+			cLoad = Thread.currentThread().getContextClassLoader();
+			BufferedImage wImage = ImageIO.read(cLoad.getResource("Wait.png"));
+			int wIconWidth = this.getHeight() / 5;
+			wIcon = new ImageIcon(wImage.getScaledInstance(wIconWidth, -1, Image.SCALE_SMOOTH), "STARsearch");
+
+			
+			//Set Current Image
+			imageLabel = new JLabel(sIcon);
 			imageLabel.setSize(this.getHeight()/5, this.getHeight() / 5);
 			
 			c.fill = GridBagConstraints.BOTH;
@@ -104,6 +117,9 @@ public class view extends JFrame implements KeyListener {
 		this.add(searchField, c);
 
 
+		TextPrompt testPrompt = new TextPrompt("Search", searchField);
+		testPrompt.changeAlpha(0.25f);
+		
 		//Results Box
 		listModel = new DefaultListModel<File>();
 		results = new JList<File>(listModel);
@@ -159,6 +175,9 @@ public class view extends JFrame implements KeyListener {
 	@Override
 	public void keyTyped(KeyEvent e) {
 		if (e.getKeyChar() == KeyEvent.VK_ENTER) {
+			//change the icon
+			imageLabel.setIcon(wIcon);
+			
 			//clear the list view
 			listModel.clear();
 			
@@ -185,6 +204,8 @@ public class view extends JFrame implements KeyListener {
 
 			public void run() {
 				//basically our old view method neatly wrapped up
+				//restore the icon
+				imageLabel.setIcon(sIcon);
 				
 				//clear the list
 				listModel.clear();
