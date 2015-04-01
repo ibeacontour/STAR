@@ -12,11 +12,11 @@ public class MyRunnable implements Runnable{
 	// Please don't use full unless you REALLY want to search for a while
 	Boolean simpleMode = true;
 	// Here, -1 indicated that there is no limit to depth in directory searches. This is the default.
-	int dirDepth = 2;
+	int dirDepth = 3;
 
 	// 
 	public MyRunnable(String theFileToFind, Model theModel) {
-		// delete these when things start to work
+		// delete these when things start to work 
 		// just a demo arraylist to show that something can work
 		theFile = theFileToFind;
 		model = theModel;
@@ -261,7 +261,7 @@ public class MyRunnable implements Runnable{
 		}
 
 		for (File f:inThisDir) {
-			if (f.getName().contains(search) && !f.isDirectory()) {
+			if ((f.getName().contains(search) || f.getName().startsWith(search)) && !f.isDirectory()) {
 				// Add this match to the results list
 				//System.out.println("Added " + f.getName() + " to results");
 				matchesInDir.add(f);

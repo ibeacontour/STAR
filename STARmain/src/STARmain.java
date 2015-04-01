@@ -43,7 +43,9 @@ public class STARmain implements NativeKeyListener {
 					
 					//create a tray icon
 					tIcon = new TrayIcon(tImage.getScaledInstance(tIconWidth, -1, Image.SCALE_SMOOTH), "STARsearch");
-				
+					mySearchView.setIconImage(tImage.getScaledInstance(tIconWidth, -1, Image.SCALE_SMOOTH));
+					mySearchView.setTitle("STARsearch");
+					
 					//create popup menu
 					PopupMenu pMenu = new PopupMenu();
 					

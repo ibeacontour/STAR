@@ -1,9 +1,12 @@
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class view extends JFrame implements KeyListener {
@@ -64,6 +67,25 @@ public class view extends JFrame implements KeyListener {
 
 		// initialize controls	
 
+		//Search Icon
+		//create an image
+		try {
+			ClassLoader cLoad = Thread.currentThread().getContextClassLoader();
+			BufferedImage tImage = ImageIO.read(cLoad.getResource("icon.png"));
+			int tIconWidth = this.getHeight() / 5;
+			ImageIcon iIcon = new ImageIcon(tImage.getScaledInstance(tIconWidth, -1, Image.SCALE_SMOOTH), "STARsearch");
+			JLabel imageLabel = new JLabel(iIcon);
+			imageLabel.setSize(this.getHeight()/5, this.getHeight() / 5);
+			
+			c.fill = GridBagConstraints.BOTH;
+			c.gridx = 0;
+			c.gridy = 0;
+			c.weightx = (this.getHeight() / 5)/this.getWidth();
+			this.add(imageLabel, c);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
 		//Search Field
 		//initialization
 		searchField = new JTextField();
@@ -74,7 +96,7 @@ public class view extends JFrame implements KeyListener {
 
 		//layout
 		c.fill = GridBagConstraints.BOTH;
-		c.gridx = 0;
+		c.gridx = 1;
 		c.gridy = 0;
 		c.weightx = 1;
 		//c.weighty = .10;
@@ -89,11 +111,7 @@ public class view extends JFrame implements KeyListener {
 		c.gridy = 1;
 		c.weighty = 1;
 		c.gridheight = 3;
-
-		//dummy data
-		//listModel.addElement();
-		//listModel.addElement("The Tempest");
-		//listModel.addElement("Othello");
+		c.gridwidth = 2;
 
 		this.add(results, c);
 		
