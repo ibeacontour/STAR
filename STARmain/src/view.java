@@ -1,6 +1,7 @@
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.border.Border;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -18,6 +19,7 @@ public class view extends JFrame implements KeyListener {
 	private static JLabel imageLabel;
 
 	//TODO: create custom type for results, no way string will be sufficient
+	private static JScrollPane rScroll;
 	private static JList<File> results;
 	private static DefaultListModel<File> listModel;
 	private static ImageIcon sIcon;
@@ -57,6 +59,7 @@ public class view extends JFrame implements KeyListener {
 
 		//Borderless Window
 		this.setUndecorated(true);
+		((JComponent)this.getContentPane()).setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
 
 		//set default size to some same ratio of the current desktops size
 		Dimension screenDims = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
@@ -90,10 +93,11 @@ public class view extends JFrame implements KeyListener {
 			imageLabel = new JLabel(sIcon);
 			imageLabel.setSize(this.getHeight()/5, this.getHeight() / 5);
 			
+
 			c.fill = GridBagConstraints.BOTH;
 			c.gridx = 0;
 			c.gridy = 0;
-			c.weightx = (this.getHeight() / 5)/this.getWidth();
+			c.weightx = (double)(imageLabel.getWidth())/(double)this.getWidth();
 			this.add(imageLabel, c);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -123,14 +127,18 @@ public class view extends JFrame implements KeyListener {
 		//Results Box
 		listModel = new DefaultListModel<File>();
 		results = new JList<File>(listModel);
+		rScroll = new JScrollPane(results);
+		
 		c.gridx = 0;
 		c.gridy = 1;
 		c.weighty = 1;
 		c.gridheight = 3;
 		c.gridwidth = 2;
 
-		this.add(results, c);
+		this.add(rScroll, c);
 		
+		((JComponent)rScroll).setBorder(BorderFactory.createMatteBorder(3, 0, 0, 0, Color.BLACK));
+		//rScroll.add(results, );
 		
 		//for the JLIST
 		results.addMouseListener(new MouseAdapter() {
