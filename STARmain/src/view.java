@@ -1,8 +1,6 @@
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.border.Border;
-
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
@@ -13,22 +11,23 @@ import java.util.ArrayList;
 public class view extends JFrame implements KeyListener {
 	private static final long serialVersionUID = -4531812284827958061L;
 	// create the controls to be placed on the form
-	private JTextField searchField;
+	private static JTextField searchField;
 	private String search;
 	private Controller controller;
 	private static JLabel imageLabel;
 
 	//TODO: create custom type for results, no way string will be sufficient
 	private static JScrollPane rScroll;
-	private static JList<File> results;
-	private static DefaultListModel<File> listModel;
+	private static JList<Object> results;
+	private static DefaultListModel<Object> listModel;
 	private static ImageIcon sIcon;
 	private static ImageIcon wIcon;
+	private static int cHeight;
 	
 	//NOTE: this is a hack for the code below so that we have access to our JFrame since
 	//keyword "this" in the below context refers to the component adapter and not THIS as
 	//in our frame itself. Bad practice, please advise.
-	private JFrame myFrame = this;
+	private static JFrame myFrame; // = this;
 
 	//controller for on shown and hidden events
 	ComponentAdapter myComponentAdapter = new ComponentAdapter() {
@@ -40,20 +39,42 @@ public class view extends JFrame implements KeyListener {
 
 			//clear the results
 			listModel.clear();
+			
+			//restore the size
+			rScroll.setVisible(false);
+			myFrame.setSize(myFrame.getWidth(), searchField.getHeight());
+			
+			//release from the foreground
+			myFrame.setAlwaysOnTop(false);
 		}
 		public void componentShown(ComponentEvent e) {
 			/* code run when component shown */
-			//Center on screen
+			//Center on screen	
 			Dimension screenDims = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
 			myFrame.setLocation((screenDims.width - myFrame.getWidth())/2, (screenDims.height - myFrame.getHeight())/2);
 
+			//compact the view (hide the results field)
+			rScroll.setVisible(false);
+			cHeight = searchField.getHeight();
+			myFrame.setSize(myFrame.getWidth(), cHeight);
+			
+			//make the search field's border sexy
+			//searchField.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 0, Color.BLACK));
+			
+			//lock to the foreground
+			myFrame.setAlwaysOnTop(true);
+			
+			//grab focus
+			searchField.requestFocus();
+			
 		}
 	};
 
 
 	public view() {
-		// TODO: check for headless environment, add multiple desktop handling
-
+		//we need this hacked solution to access the frame outside of its context
+		myFrame = this;
+		
 		//Windows Configuration Parameters
 		this.addComponentListener(myComponentAdapter);
 
@@ -111,6 +132,7 @@ public class view extends JFrame implements KeyListener {
 		searchField.setHorizontalAlignment(JTextField.LEFT);
 		searchField.addKeyListener(this);
 
+		searchField.setBorder(BorderFactory.createMatteBorder(3, 0, 3, 0, Color.BLACK));
 		//layout
 		c.fill = GridBagConstraints.BOTH;
 		c.gridx = 1;
@@ -125,8 +147,8 @@ public class view extends JFrame implements KeyListener {
 		testPrompt.changeAlpha(0.25f);
 		
 		//Results Box
-		listModel = new DefaultListModel<File>();
-		results = new JList<File>(listModel);
+		listModel = new DefaultListModel<Object>();
+		results = new JList<Object>(listModel);
 		rScroll = new JScrollPane(results);
 		
 		c.gridx = 0;
@@ -136,8 +158,7 @@ public class view extends JFrame implements KeyListener {
 		c.gridwidth = 2;
 
 		this.add(rScroll, c);
-		
-		((JComponent)rScroll).setBorder(BorderFactory.createMatteBorder(3, 0, 0, 0, Color.BLACK));
+		((JComponent)rScroll).setBorder(BorderFactory.createMatteBorder(0, 0, 0, 0, Color.BLACK));
 		//rScroll.add(results, );
 		
 		//for the JLIST
@@ -188,6 +209,13 @@ public class view extends JFrame implements KeyListener {
 			
 			//clear the list view
 			listModel.clear();
+						
+			//compact the view (hide the results field)
+			rScroll.setVisible(false);
+			myFrame.setSize(myFrame.getWidth(), cHeight);
+			
+			//make the search field's border sexy
+			searchField.setBorder(BorderFactory.createMatteBorder(3, 0, 3, 0, Color.BLACK));
 			
 			search = searchField.getText();
 			System.out.println(search);
@@ -238,14 +266,35 @@ public class view extends JFrame implements KeyListener {
 				//clear the list
 				listModel.clear();
 				
+				//show the results field
+				//set default size to some same ratio of the current desktops size
+				Dimension screenDims = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
+				myFrame.setSize(screenDims.width/3, screenDims.height/5);
+				
+				//fix the jank search border
+				searchField.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 0, Color.BLACK));
+				
+				//Add a border to the top of the results box
+				((JComponent)rScroll).setBorder(BorderFactory.createMatteBorder(3, 0, 0, 0, Color.BLACK));
+				
+				//finally show the results
+				rScroll.setVisible(true);
+				
+				
 				//add all the new results to the list
 				for (int i = 0; i < newFiles.size(); i++) {
 					listModel.addElement(newFiles.get(i));
 				}
 				
 				results.setModel(listModel);
-				//results.
-				//results = new JList<File>(listModel);
+				
+				
+				if (listModel.getSize() > 0) {
+					results.setEnabled(true);
+				} else {
+					listModel.addElement("(No Results Found)");
+					results.setEnabled(false);
+				}
 			}
 		}
 		
