@@ -2,9 +2,18 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="images"/>
+<<<<<<< HEAD
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/junit-4.10.jar"/>
 	<classpathentry kind="lib" path="lib/JNativeHook.jar"/>
 	<classpathentry kind="lib" path="lib/ini4j-0.5.4.jar"/>
+=======
+	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry exported="true" kind="lib" path="lib/junit-4.10.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/JNativeHook.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/JunitExecTest.jar"/>
+	<classpathentry kind="lib" path="lib/ini4j-0.5.4.jar"/>
+	<classpathentry kind="lib" path="lib/ini4j-0.5.4-jdk14.jar"/>
+>>>>>>> refs/remotes/origin/master
 	<classpathentry kind="output" path="bin"/>
 </classpath>

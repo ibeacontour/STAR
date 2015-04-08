@@ -10,16 +10,18 @@ public class MyRunnable implements Runnable{
 	ArrayList<File> stuff = new ArrayList<File>();
 	// Here, simple mode is true for simple, false for advanced (full)
 	// Please don't use full unless you REALLY want to search for a while
-	Boolean simpleMode = true;
+	Boolean simpleMode;
 	// Here, -1 indicated that there is no limit to depth in directory searches. This is the default.
-	int dirDepth = 3;
+	int dirDepth;
 
 	// 
-	public MyRunnable(String theFileToFind, Model theModel) {
+	public MyRunnable(String theFileToFind, Model theModel,int dD,boolean sM) {
 		// delete these when things start to work 
 		// just a demo arraylist to show that something can work
 		theFile = theFileToFind;
 		model = theModel;
+		dirDepth = dD;
+		simpleMode = sM;
 	}
 
 	// main heavy lifting method that likes a string to look for

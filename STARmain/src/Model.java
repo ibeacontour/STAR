@@ -8,6 +8,8 @@ public class Model {
 	Controller controller;
 	Thread t1;
 	MyRunnable run;
+	int dirDepth;
+	Boolean simpleMode;
 
 	// blank constructor
 	public Model() {
@@ -18,7 +20,7 @@ public class Model {
 	// function that runs the thread that will search for possible files
 	public void SearchFor(String fileNameToFind) throws InterruptedException {
 		
-		run = new MyRunnable(fileNameToFind, this);
+		run = new MyRunnable(fileNameToFind, this,dirDepth,simpleMode);
 		System.out.println("I started a new search");
 		
 		// run the search
@@ -71,5 +73,10 @@ public class Model {
 		}
 		
 	}
-	
+	public void setDirDepth(int i) {
+		dirDepth = i;
+	}
+	public void setSimpleMode(boolean b) {
+		simpleMode = b;
+	}
 }
