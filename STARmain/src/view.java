@@ -199,6 +199,26 @@ public class view extends JFrame implements KeyListener {
 				e1.printStackTrace();
 			}
 		}
+		
+		if (e.getKeyChar() == KeyEvent.VK_DOWN) {
+			if (results.getSelectedIndex() == -1) 
+				results.setSelectedIndex(0);
+			else if (results.getSelectedIndex() == (results.getComponentCount() - 1))
+				results.setSelectedIndex(0);
+			else {
+				results.setSelectedIndex(results.getSelectedIndex() + 1);
+			}
+		}
+		
+		if (e.getKeyChar() == KeyEvent.VK_UP) {
+			if (results.getSelectedIndex() == -1) 
+				results.setSelectedIndex(results.getComponentCount() - 1);
+			else if (results.getSelectedIndex() == 0)
+				results.setSelectedIndex(results.getComponentCount() - 1);
+			else {
+				results.setSelectedIndex(results.getSelectedIndex() - 1);
+			}
+		}
 
 	}
 	
