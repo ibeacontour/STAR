@@ -12,7 +12,13 @@ import org.junit.Test;
 public class StarTest {
 	
 	Boolean foundExactFile = false;
-    Model model = new Model();
+	Model model = new Model();
+	Controller controller = new Controller();
+	static view mySearchView = new view();
+	//model.setController(controller);
+	//mySearchView.setController(controller);
+	//controller.setModel(model);
+	//controller.setView(mySearchView);
     ArrayList<File> stuff;
     String f1 = "randomFile.txt";
     String f2 = "anotherRandomFile.txt";
@@ -21,6 +27,11 @@ public class StarTest {
 	@Test
 	  public void basicTestSearch() throws FileNotFoundException, UnsupportedEncodingException, InterruptedException {
 	    
+		model.setController(controller);
+		mySearchView.setController(controller);
+		controller.setModel(model);
+		controller.setView(mySearchView);
+		
 		// use printer writers to make a couple test files
 	    PrintWriter writer = new PrintWriter(f1, "UTF-8");
 	    writer.println("The first line");
@@ -58,6 +69,11 @@ public class StarTest {
 	@Test
 	  public void advancedTestSearch() throws FileNotFoundException, UnsupportedEncodingException, InterruptedException {
 	
+		model.setController(controller);
+		mySearchView.setController(controller);
+		controller.setModel(model);
+		controller.setView(mySearchView);
+		
 		// use printer writers to make a couple test files
 	    PrintWriter writer = new PrintWriter(f1, "UTF-8");
 	    writer.println("The first line");
@@ -91,15 +107,15 @@ public class StarTest {
 	
 	@Test
 	  public void executeTest() throws InterruptedException, IOException {
-		model.SearchFor("eclipse");
-		model.t1.join();
-		stuff = model.getResults();
+		model.setController(controller);
+		mySearchView.setController(controller);
+		controller.setModel(model);
+		controller.setView(mySearchView);
 		
-		// start trying to executing all possible eclipse executables
-		for(File file:stuff) {
-			model.genericExecuteFile(file.getAbsoluteFile());
-			
-		}
+	
+		//Process p = Runtime.getRuntime().exec("notepad.exe");
+		Process p = Runtime.getRuntime().exec("java -jar JunitExecTest.jar");
+		p.waitFor();
 		
 		// if programs come up, it works!
 		

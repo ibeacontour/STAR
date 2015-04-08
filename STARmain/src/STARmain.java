@@ -2,13 +2,17 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 
+import org.ini4j.InvalidFileFormatException;
+import org.ini4j.Wini;
 import org.jnativehook.*;
 import org.jnativehook.keyboard.*;
 
@@ -16,9 +20,10 @@ public class STARmain implements NativeKeyListener {
 	static view mySearchView = new view();
 	static TrayIcon tIcon;
 	
+	
 	static int state = 0;
 	
-	public static void main(String[] args) throws InterruptedException  {
+	public static void main(String[] args) throws InterruptedException, InvalidFileFormatException, IOException  {
 
 		// creates a model and controller
 		// also links the model, view, and controller together in the MCV style
@@ -28,6 +33,26 @@ public class STARmain implements NativeKeyListener {
 		mySearchView.setController(controller);
 		controller.setModel(model);
 		controller.setView(mySearchView);
+		boolean firstTime = true;
+		
+		// loads settings from an ini file
+		if(firstTime == true) {
+			firstTime = false;
+			File tempFile = new File("STAR.ini");
+			if(!tempFile.exists()) {
+				PrintWriter writer = new PrintWriter("STAR.ini", "UTF-8");
+				writer.println("[basic options]");
+				writer.println("simple mode = true");
+				writer.println("directory depth = 3");
+				writer.close();
+				System.out.println("I created a new ini file");
+			}
+			Wini ini = new Wini(new File("STAR.ini"));
+			int dirDepth = ini.get("basic options","directory depth",int.class);
+			Boolean simpleMode = ini.get("basic options","simple mode",boolean.class);
+			model.setDirDepth(dirDepth);
+			model.setSimpleMode(simpleMode);
+		}
 
 		//BEGIN VIEW
 		//check for a windowed environment
