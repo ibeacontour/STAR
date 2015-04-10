@@ -260,9 +260,23 @@ public class view extends JFrame implements KeyListener {
 	}
 	
 	public static void finishSearch() {
-		//that's all for now
-		//restore the icon
-		imageLabel.setIcon(sIcon);
+		//cross threading safety
+		SwingUtilities.invokeLater(new Runnable() {			
+			@Override
+			public void run() {
+				//that's all for now
+				//restore the icon
+				imageLabel.setIcon(sIcon);
+				
+				//check for no results
+				if (listModel.getSize() > 0) {
+					results.setEnabled(true);
+				} else {
+					listModel.addElement("(No results found.)");
+					results.setEnabled(false);
+				}
+			}
+		});
 	}
 	
 	public static void setResults(ArrayList<File> rslts){
@@ -307,7 +321,7 @@ public class view extends JFrame implements KeyListener {
 				if (listModel.getSize() > 0) {
 					results.setEnabled(true);
 				} else {
-					listModel.addElement("(No Results Found)");
+					listModel.addElement("(Searching...)");
 					results.setEnabled(false);
 				}
 			}
