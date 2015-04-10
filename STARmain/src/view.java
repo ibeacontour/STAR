@@ -259,6 +259,12 @@ public class view extends JFrame implements KeyListener {
 
 	}
 	
+	public static void finishSearch() {
+		//that's all for now
+		//restore the icon
+		imageLabel.setIcon(sIcon);
+	}
+	
 	public static void setResults(ArrayList<File> rslts){
 		
 		//used to pass ArrayList<File> Parameter to a runnable
@@ -269,8 +275,8 @@ public class view extends JFrame implements KeyListener {
 
 			public void run() {
 				//basically our old view method neatly wrapped up
-				//restore the icon
-				imageLabel.setIcon(sIcon);
+//				//restore the icon
+//				imageLabel.setIcon(sIcon);
 				
 				//clear the list
 				listModel.clear();

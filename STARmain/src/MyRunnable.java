@@ -258,10 +258,8 @@ public class MyRunnable implements Runnable{
 			System.out.println("Found a match in: " + f.getAbsolutePath());
 			stuff.add(f);
 		}
-
 		model.setResults(results);
-
-
+		model.finishSearch();
 
 	}
 

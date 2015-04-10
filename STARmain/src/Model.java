@@ -55,11 +55,16 @@ public class Model {
 		controller.refreshSearchResults(results);
 	}
 	
+	public void finishSearch() {
+		controller.finishSearch();
+	}
+	
 	public void genericExecuteFile(File f) throws InterruptedException {
 		
 		// Try to add this new file to the history table
 		if (f != null) {
 			history.put(f.getName(), f);
+			
 		}
 		
 		// check to see if the file is 'executable'
