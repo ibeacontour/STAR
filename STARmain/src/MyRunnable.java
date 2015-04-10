@@ -1,9 +1,10 @@
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.attribute.*;
+//import java.nio.file.attribute.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -40,11 +41,11 @@ public class MyRunnable implements Runnable{
 		File[] roots;
 		File tempDir;
 		File[] inDir;
-		ArrayList<File> rootDir = new ArrayList<File>();
+		//ArrayList<File> rootDir = new ArrayList<File>();
 		ArrayList<File> results = new ArrayList<File>();
 		ArrayList<File> temp;
 		File fsRootPrimary = null;
-		String osName = "";
+		//String osName = "";
 		String search = theFile;
 
 
@@ -170,20 +171,29 @@ public class MyRunnable implements Runnable{
 				tempDir = new File("/usr/bin");
 				System.out.println("Linux executable path: " + tempDir.getAbsolutePath());
 
-				if (tempDir.exists()) {
-					inDir = tempDir.listFiles();
-					for (File g:inDir) {
-						if (finished == true) {
-							return;
-						}
-						temp = searchDir(g, search, 0);
-						if (temp != null) {
-							// Add only those that weren't added from the history already.
-							for (File h:temp) {
-								if (!results.contains(h)) {
-									results.add(h);
-								}
-							}
+//				if (tempDir.exists()) {
+//					inDir = tempDir.listFiles();
+//					for (File g:inDir) {
+//						if (finished == true) {
+//							return;
+//						}
+//						temp = searchDir(g, search, 0);
+//						if (temp != null) {
+//							// Add only those that weren't added from the history already.
+//							for (File h:temp) {
+//								if (!results.contains(h)) {
+//									results.add(h);
+//								}
+//							}
+//						}
+//					}
+//				}
+				temp = searchDir(tempDir, search, 0);
+				if (temp != null) {
+					// Add only those that weren't added from the history already.
+					for (File h:temp) {
+						if (!results.contains(h)) {
+							results.add(h);
 						}
 					}
 				}
@@ -191,20 +201,29 @@ public class MyRunnable implements Runnable{
 				tempDir = new File("/bin");
 				System.out.println("Linux executable path: " + tempDir.getAbsolutePath());
 
-				if (tempDir.exists()) {
-					inDir = tempDir.listFiles();
-					for (File g:inDir) {
-						if (finished == true) {
-							return;
-						}
-						temp = searchDir(g, search, 0);
-						if (temp != null) {
-							// Add only those that weren't added from the history already.
-							for (File h:temp) {
-								if (!results.contains(h)) {
-									results.add(h);
-								}
-							}
+				//				if (tempDir.exists()) {
+				//					inDir = tempDir.listFiles();
+				//					for (File g:inDir) {
+				//						if (finished == true) {
+				//							return;
+				//						}
+				//						temp = searchDir(g, search, 0);
+				//						if (temp != null) {
+				//							// Add only those that weren't added from the history already.
+				//							for (File h:temp) {
+				//								if (!results.contains(h)) {
+				//									results.add(h);
+				//								}
+				//							}
+				//						}
+				//					}
+				//				}
+				temp = searchDir(tempDir, search, 0);
+				if (temp != null) {
+					// Add only those that weren't added from the history already.
+					for (File h:temp) {
+						if (!results.contains(h)) {
+							results.add(h);
 						}
 					}
 				}
@@ -291,14 +310,24 @@ public class MyRunnable implements Runnable{
 					}
 				}
 			} else {
-				if (Files.isSymbolicLink(Paths.get(f.toURI()))) {
+				Path symPath = null;
+				try {
+					symPath = Paths.get(f.toURI());
+				} catch (InvalidPathException e) {
+					// If the path comes up to be invalid, we need to skip this file
+					//e.printStackTrace();
+					//System.out.println("Bad path, moving on: " + f.getAbsolutePath());
+					continue;
+				}
+				if (Files.isSymbolicLink(symPath)) {
 					// we have a symbolic link, see what the real file is and if it matches.
 					File sym = null;
 					try {
-						sym = Files.readSymbolicLink(Paths.get(f.toURI())).toFile();
+						sym = Files.readSymbolicLink(symPath).toFile();
+						//System.out.println("Resolved a symlink, from : " + symPath.toString() + " to : " + sym);
 					} catch (IOException e) {
 						// Something messed up
-						System.out.println("Something messed up trying to resolve a symbolic link");
+						//System.out.println("Something messed up trying to resolve a symbolic link");
 						e.printStackTrace();
 					}
 					if (sym != null && !sym.isDirectory()) {
@@ -316,7 +345,6 @@ public class MyRunnable implements Runnable{
 					}
 				}
 			}
-
 		}
 
 		return matchesInDir;
