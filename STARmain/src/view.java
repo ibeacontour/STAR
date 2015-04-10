@@ -23,6 +23,7 @@ public class view extends JFrame implements KeyListener {
 	private static ImageIcon sIcon;
 	private static ImageIcon wIcon;
 	private static int cHeight;
+	private static int fHeight;
 	
 	//NOTE: this is a hack for the code below so that we have access to our JFrame since
 	//keyword "this" in the below context refers to the component adapter and not THIS as
@@ -49,13 +50,20 @@ public class view extends JFrame implements KeyListener {
 		}
 		public void componentShown(ComponentEvent e) {
 			/* code run when component shown */
-			//Center on screen	
-			Dimension screenDims = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
-			myFrame.setLocation((screenDims.width - myFrame.getWidth())/2, (screenDims.height - myFrame.getHeight())/2);
-
 			//compact the view (hide the results field)
 			rScroll.setVisible(false);
-			cHeight = searchField.getHeight();
+			if (fHeight == 0) {
+				fHeight = myFrame.getHeight();
+			}
+			if (cHeight == 0) {
+				cHeight = searchField.getHeight();
+			}
+			
+			//Center on screen	
+			Dimension screenDims = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
+			myFrame.setLocation((screenDims.width - myFrame.getWidth())/2, (screenDims.height - fHeight)/2);
+
+			//compact
 			myFrame.setSize(myFrame.getWidth(), cHeight);
 			
 			//make the search field's border sexy
@@ -65,7 +73,8 @@ public class view extends JFrame implements KeyListener {
 			myFrame.setAlwaysOnTop(true);
 			
 			//grab focus
-			searchField.requestFocus();
+			myFrame.requestFocus();
+			searchField.requestFocusInWindow();
 			
 		}
 	};
