@@ -10,6 +10,7 @@ import java.util.logging.Logger;
 
 import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
 import org.ini4j.InvalidFileFormatException;
 import org.ini4j.Wini;
@@ -120,9 +121,9 @@ public class STARmain implements NativeKeyListener {
 					//create a popup error
 					System.err.println(e);
 				} catch (IOException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				} catch (NativeHookException e) {
+					JOptionPane.showConfirmDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 					e.printStackTrace();
 				}
 			}
@@ -149,13 +150,23 @@ public class STARmain implements NativeKeyListener {
 		//implement state as per detected key
 		if (arg0.getKeyCode() == NativeKeyEvent.VC_CONTROL_L) {
 			controlState = 1;
+			System.out.println("control");
 		} else if (arg0.getKeyCode() == NativeKeyEvent.VC_SPACE) {
 			spaceState = 1;
+			System.out.println("space");
 		}
 		
 		//if both keys are down we will be in state 2 and show the form
 		if ((controlState > 0) && (spaceState > 0)) {
-			mySearchView.setVisible(true);
+			SwingUtilities.invokeLater(new Runnable() {
+
+				@Override
+				public void run() {
+					// TODO Auto-generated method stub
+					mySearchView.setVisible(true);
+				}
+				
+			});
 		}
 	}
 
