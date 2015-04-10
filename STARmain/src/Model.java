@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.io.File;
 import java.io.IOException;
 
@@ -10,6 +11,7 @@ public class Model {
 	MyRunnable run;
 	int dirDepth;
 	Boolean simpleMode;
+	HashMap<String, File> history = new HashMap<String, File>();
 
 	// blank constructor
 	public Model() {
@@ -55,6 +57,11 @@ public class Model {
 	
 	public void genericExecuteFile(File f) throws InterruptedException {
 		
+		// Try to add this new file to the history table
+		if (f != null) {
+			history.put(f.getName(), f);
+		}
+		
 		// check to see if the file is 'executable'
 		if(f == null || !f.canExecute()) {
 			System.out.println("Can not execute: " + f.getName());
@@ -78,5 +85,13 @@ public class Model {
 	}
 	public void setSimpleMode(boolean b) {
 		simpleMode = b;
+	}
+	
+	public HashMap<String, File> getHistory() {
+		if (history != null) {
+			return history;
+		} else {
+			return new HashMap<String, File>();
+		}
 	}
 }

@@ -43,7 +43,7 @@ public class STARmain implements NativeKeyListener {
 				PrintWriter writer = new PrintWriter("STAR.ini", "UTF-8");
 				writer.println("[basic options]");
 				writer.println("simple mode = true");
-				writer.println("directory depth = 3");
+				writer.println("directory depth = -1");
 				writer.close();
 				System.out.println("I created a new ini file");
 			}
