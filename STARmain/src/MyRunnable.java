@@ -1,6 +1,12 @@
 import java.io.File;
-import java.nio.file.attribute.*;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+//import java.nio.file.attribute.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class MyRunnable implements Runnable{
 	volatile boolean finished = false;
@@ -33,12 +39,25 @@ public class MyRunnable implements Runnable{
 		File[] roots;
 		File tempDir;
 		File[] inDir;
-		ArrayList<File> rootDir = new ArrayList<File>();
+		//ArrayList<File> rootDir = new ArrayList<File>();
 		ArrayList<File> results = new ArrayList<File>();
+		ArrayList<File> temp;
 		File fsRootPrimary = null;
-		String osName = "";
+		//String osName = "";
 		String search = theFile;
 
+
+		// Do a quick check of the file history map, and if it contains any matches to our query, if so add them and push them right away. 
+		HashMap<String, File> history = model.getHistory();
+		if (!history.isEmpty()) {
+			for (String s:history.keySet()) {
+				if (s.contains(search) || s.startsWith(search)) {
+					results.add(history.get(s));
+				}
+			}
+		}
+		// now push these to the view ahead of the brute force search
+		model.setResults(results);
 
 		// Looks at the filesystem roots and determines which one to search
 		roots = File.listRoots();
@@ -54,7 +73,7 @@ public class MyRunnable implements Runnable{
 				fsRootPrimary = f;
 				//System.out.println("Found the / root (UNIX/LINUX)");
 				//System.out.println(f.getAbsolutePath());
-			}	
+			}
 		}
 
 		// Check that we have a real fs root directory
@@ -69,32 +88,40 @@ public class MyRunnable implements Runnable{
 			tempDir = new File(System.getProperty("user.home"));
 			System.out.println("Home dir: " + tempDir.getAbsolutePath());
 
+			// This shortened search for some reason doesn't work, so the longer one will have to work for now.
+			//			temp = searchDir(tempDir, search, 0);
+			//			if (temp != null) {
+			//				// Add only those that weren't added from the history already.
+			//				for (File h:temp) {
+			//					if (!results.contains(h)) {
+			//						results.add(h);
+			//					}
+			//				}
+			//			}
+
 			if (tempDir.exists()) {
 				inDir = tempDir.listFiles(); 
 				for (File g:inDir) {
 					if(finished == true) {
 						return;
 					}
-					ArrayList<File> temp = searchDir(g, search, 0);
+					temp = searchDir(g, search, 0);
 					if (temp != null) {
-						results.addAll(temp);
+						// Add only those that weren't added from the history already.
+						for (File h:temp) {
+							if (!results.contains(h)) {
+								results.add(h);
+							}
+						}
 					}
 				}
 			}
-
-			//		tempDir = fsRootPrimary.listFiles();
-			//		// DEBUG
-			//		for (File f:tempDir) {
-			//			if(finished == true) {
-			//				return;
-			//			}
-			//			//System.out.println("Added " + f.getAbsolutePath() + " to arrayList");
-			//		}
 
 			if (System.getProperty("os.name").startsWith("Windows")) {
 				// Search the 64-bit binary folder on windows, if it exists
 				tempDir = new File(System.getenv("ProgramFiles"));
 				System.out.println("Program Files (64): " + tempDir.getAbsolutePath());
+
 
 				if (tempDir.exists()) {
 					inDir = tempDir.listFiles();
@@ -102,9 +129,14 @@ public class MyRunnable implements Runnable{
 						if (finished == true) {
 							return;
 						}
-						ArrayList<File> temp = searchDir(g, search, 0);
+						temp = searchDir(g, search, 0);
 						if (temp != null) {
-							results.addAll(temp);
+							// Add only those that weren't added from the history already.
+							for (File h:temp) {
+								if (!results.contains(h)) {
+									results.add(h);
+								}
+							}
 						}
 					}
 				}
@@ -119,32 +151,80 @@ public class MyRunnable implements Runnable{
 						if (finished == true) { 
 							return;
 						}
-						ArrayList<File> temp = searchDir(g, search, 0);
+						temp = searchDir(g, search, 0);
 						if (temp != null) {
-							results.addAll(temp);
+							// Add only those that weren't added from the history already.
+							for (File h:temp) {
+								if (!results.contains(h)) {
+									results.add(h);
+								}
+							}
 						}
 					}
 				}
 
 			} else if (System.getProperty("os.name").startsWith("Linux")) {
 
-				// executables folder for linux
+				// executables folder(s) for linux
 				tempDir = new File("/usr/bin");
-				System.out.println("Linux $PATH: " + tempDir.getAbsolutePath());
-				
-				if (tempDir.exists()) {
-					inDir = tempDir.listFiles();
-					for (File g:inDir) {
-						if (finished == true) {
-							return;
-						}
-						ArrayList<File> temp = searchDir(g, search, 0);
-						if (temp != null) {
-							results.addAll(temp);
+				System.out.println("Linux executable path: " + tempDir.getAbsolutePath());
+
+//				if (tempDir.exists()) {
+//					inDir = tempDir.listFiles();
+//					for (File g:inDir) {
+//						if (finished == true) {
+//							return;
+//						}
+//						temp = searchDir(g, search, 0);
+//						if (temp != null) {
+//							// Add only those that weren't added from the history already.
+//							for (File h:temp) {
+//								if (!results.contains(h)) {
+//									results.add(h);
+//								}
+//							}
+//						}
+//					}
+//				}
+				temp = searchDir(tempDir, search, 0);
+				if (temp != null) {
+					// Add only those that weren't added from the history already.
+					for (File h:temp) {
+						if (!results.contains(h)) {
+							results.add(h);
 						}
 					}
 				}
-				
+
+				tempDir = new File("/bin");
+				System.out.println("Linux executable path: " + tempDir.getAbsolutePath());
+
+				//				if (tempDir.exists()) {
+				//					inDir = tempDir.listFiles();
+				//					for (File g:inDir) {
+				//						if (finished == true) {
+				//							return;
+				//						}
+				//						temp = searchDir(g, search, 0);
+				//						if (temp != null) {
+				//							// Add only those that weren't added from the history already.
+				//							for (File h:temp) {
+				//								if (!results.contains(h)) {
+				//									results.add(h);
+				//								}
+				//							}
+				//						}
+				//					}
+				//				}
+				temp = searchDir(tempDir, search, 0);
+				if (temp != null) {
+					// Add only those that weren't added from the history already.
+					for (File h:temp) {
+						if (!results.contains(h)) {
+							results.add(h);
+						}
+					}
+				}
 
 			}
 			// if simplemode end
@@ -154,66 +234,17 @@ public class MyRunnable implements Runnable{
 				if (finished == true) {
 					return;
 				}
-				ArrayList<File> temp = searchDir(f, search, 0);
+				temp = searchDir(f, search, 0);
 				if (temp != null) {
-					results.addAll(temp);
+					// Add only those that weren't added from the history already.
+					for (File h:temp) {
+						if (!results.contains(h)) {
+							results.add(h);
+						}
+					}
 				}
 			}
 		}
-
-		//		osName = System.getProperty("os.name");
-		//
-		//		if (osName.startsWith("Windows")) {
-		//
-		//			for (File f:rootDir) {
-		//				if(finished == true) {
-		//					return;
-		//				}
-		//				/*if (f.getName().startsWith("Program Files") && f.isDirectory()) {
-		//					//System.out.println("Found a Program Files directory (Windows)");
-		//					ArrayList<File> temp = this.searchDir(f, search);
-		//					if (temp != null) {
-		//						for (File g:temp) {
-		//							results.add(g);
-		//						}
-		//					}
-		//				} else*/ if (f.getName().startsWith("Users") && f.isDirectory()) {
-		//					//System.out.println("Found a Users directory (Windows)");
-		//					ArrayList<File> temp = this.searchDir(f, search);
-		//					if (temp != null) {
-		//						for (File g:temp) {
-		//							results.add(g);
-		//						}
-		//					}
-		//				} // Does not search any other than these directories at this stage
-		//			}
-		//
-		//		} else if (osName.startsWith("Linux")) {
-		//			// Come up with some folder cases to check first
-		//			for (File f:rootDir) {
-		//				if(finished == true) {
-		//					return;
-		//				}
-		//				if (f.getName().startsWith("home") && f.isDirectory()) {
-		//					System.out.println("Found a home directory (Linux)");
-		//					ArrayList<File> temp = this.searchDir(f, search);
-		//					if (temp != null) {
-		//						for (File g:temp) {
-		//							results.add(g);
-		//						}
-		//					}
-		//				} else if ( f.getName().startsWith("bin") && f.isDirectory()) {
-		//					System.out.println("Found a bin directory (Linux)");
-		//					ArrayList<File> temp = this.searchDir(f, search);
-		//					if (temp != null) {
-		//						for (File g:temp) {
-		//							results.add(g);
-		//						}
-		//					}
-		//				}
-		//			}
-		//
-		//		}
 
 		// Print some Results
 		System.out.println();
@@ -225,10 +256,8 @@ public class MyRunnable implements Runnable{
 			System.out.println("Found a match in: " + f.getAbsolutePath());
 			stuff.add(f);
 		}
-
 		model.setResults(results);
-
-
+		model.finishSearch();
 
 	}
 
@@ -244,13 +273,13 @@ public class MyRunnable implements Runnable{
 		// null checks on input
 		if (dir == null) {
 			return null;
-		} else if (depth >= dirDepth && !(dirDepth < 0)) {
+		} else if (depth >= dirDepth && dirDepth >= 0) {
 			// If we aren't in free default depth mode, kill the recursion if we go over the depth specified. 
-			// Note that this method can return null, while it handles that recursively it may act strangely
+			// Note that this method can return null, and while it handles that recursively, it may act strangely
 			return null;
 		} else {
 			inThisDir = dir.listFiles(); 
-			System.out.println("Entered a dir: " + dir.getAbsolutePath());
+			//System.out.println("Entered a dir: " + dir.getAbsolutePath());
 		}
 
 		//System.out.println("Entered a directory called: " + dir.getAbsolutePath());
@@ -262,24 +291,57 @@ public class MyRunnable implements Runnable{
 
 		for (File f:inThisDir) {
 			if ((f.getName().contains(search) || f.getName().startsWith(search)) && !f.isDirectory()) {
-				// Add this match to the results list
+				// Add this match to the results list, if it isn't already in the results.
 				//System.out.println("Added " + f.getName() + " to results");
 				matchesInDir.add(f);
-			} else {
+
+
+			} else if (f.isDirectory()){
 				// if a directory, recurse
-				if (f.isDirectory()) {
-					ArrayList<File> temp = searchDir(f, search, depth + 1);
-					// Add any matches in here to our results list 
-					if (temp != null) {
-						for (File g:temp) {
-							matchesInDir.add(g);
+				ArrayList<File> temp = searchDir(f, search, depth + 1);
+				// Add any matches in here to our results list 
+				if (temp != null) {
+					for (File g:temp) {
+						matchesInDir.add(g);
+					}
+				}
+			} else {
+				Path symPath = null;
+				try {
+					symPath = Paths.get(f.toURI());
+				} catch (InvalidPathException e) {
+					// If the path comes up to be invalid, we need to skip this file
+					//e.printStackTrace();
+					//System.out.println("Bad path, moving on: " + f.getAbsolutePath());
+					continue;
+				}
+				if (Files.isSymbolicLink(symPath)) {
+					// we have a symbolic link, see what the real file is and if it matches.
+					File sym = null;
+					try {
+						sym = Files.readSymbolicLink(symPath).toFile();
+						//System.out.println("Resolved a symlink, from : " + symPath.toString() + " to : " + sym);
+					} catch (IOException e) {
+						// Something messed up
+						//System.out.println("Something messed up trying to resolve a symbolic link");
+						e.printStackTrace();
+					}
+					if (sym != null && !sym.isDirectory()) {
+						if (sym.getName().contains(search) || sym.getName().startsWith(search)) {
+							matchesInDir.add(sym);
+						}
+					} else if (sym.isDirectory()) {
+						ArrayList<File> temp;
+						temp = searchDir(sym, search, depth+1);
+						if (temp != null) {
+							for (File g:temp) {
+								matchesInDir.add(g);
+							}
 						}
 					}
 				}
 			}
-
 		}
-
 
 		return matchesInDir;
 	}

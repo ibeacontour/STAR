@@ -10,6 +10,7 @@ import java.util.logging.Logger;
 
 import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
 import org.ini4j.InvalidFileFormatException;
 import org.ini4j.Wini;
@@ -20,8 +21,8 @@ public class STARmain implements NativeKeyListener {
 	static view mySearchView = new view();
 	static TrayIcon tIcon;
 	
-	
-	static int state = 0;
+	static int spaceState = 0;
+	static int controlState = 0;
 	
 	public static void main(String[] args) throws InterruptedException, InvalidFileFormatException, IOException  {
 
@@ -47,7 +48,7 @@ public class STARmain implements NativeKeyListener {
 				PrintWriter writer = new PrintWriter("STAR.ini", "UTF-8");
 				writer.println("[basic options]");
 				writer.println("simple mode = true");
-				writer.println("directory depth = 3");
+				writer.println("directory depth = -1");
 				writer.close();
 				System.out.println("I created a new ini file");
 			}
@@ -126,9 +127,9 @@ public class STARmain implements NativeKeyListener {
 					//create a popup error
 					System.err.println(e);
 				} catch (IOException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				} catch (NativeHookException e) {
+					JOptionPane.showConfirmDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 					e.printStackTrace();
 				}
 			}
@@ -154,14 +155,24 @@ public class STARmain implements NativeKeyListener {
 	public void nativeKeyPressed(NativeKeyEvent arg0) {
 		//implement state as per detected key
 		if (arg0.getKeyCode() == NativeKeyEvent.VC_CONTROL_L) {
-			state++;
+			controlState = 1;
+			System.out.println("control");
 		} else if (arg0.getKeyCode() == NativeKeyEvent.VC_SPACE) {
-			state++;
+			spaceState = 1;
+			System.out.println("space");
 		}
 		
 		//if both keys are down we will be in state 2 and show the form
-		if (state > 1) {
-			mySearchView.setVisible(true);
+		if ((controlState > 0) && (spaceState > 0)) {
+			SwingUtilities.invokeLater(new Runnable() {
+
+				@Override
+				public void run() {
+					// TODO Auto-generated method stub
+					mySearchView.setVisible(true);
+				}
+				
+			});
 		}
 	}
 
@@ -169,13 +180,9 @@ public class STARmain implements NativeKeyListener {
 	public void nativeKeyReleased(NativeKeyEvent arg0) {
 		//decrement states as keys are released
 		if (arg0.getKeyCode() == NativeKeyEvent.VC_CONTROL_L) {
-			state--;
+			controlState = 0;
 		} else if (arg0.getKeyCode() == NativeKeyEvent.VC_SPACE) {
-			state--;
-		}
-		
-		if (state < 0)  {
-			state = 0;
+			spaceState = 0;
 		}
 		//don't hide the form, it does it itself when it has focus and escape is hit		
 	}

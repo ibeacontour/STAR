@@ -47,4 +47,8 @@ public class Controller {
 			e.printStackTrace();
 		}
 	}
+	
+	public void finishSearch() {
+		view.finishSearch();
+	}
 }
