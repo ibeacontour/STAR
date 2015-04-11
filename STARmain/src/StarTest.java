@@ -15,18 +15,17 @@ public class StarTest {
 	Model model = new Model();
 	Controller controller = new Controller();
 	static view mySearchView = new view();
-	//model.setController(controller);
-	//mySearchView.setController(controller);
-	//controller.setModel(model);
-	//controller.setView(mySearchView);
     ArrayList<File> stuff;
     String f1 = "randomFile.txt";
     String f2 = "anotherRandomFile.txt";
     
 	
 	@Test
+	// tests for basic testing functionality, basically if it will find the file or at
+	// least any related files
 	  public void basicTestSearch() throws FileNotFoundException, UnsupportedEncodingException, InterruptedException {
 	    
+		// set up model/controller
 		model.setController(controller);
 		mySearchView.setController(controller);
 		controller.setModel(model);
@@ -43,7 +42,7 @@ public class StarTest {
 	    writer2.println("The second line");
 	    writer2.close();
 	    
-	    // simple file search
+	    // simple file search for f1
 	    // join pauses program to wait until it's done for accurate results
 	    model.SearchFor(f1);
 	    model.t1.join();
@@ -67,8 +66,10 @@ public class StarTest {
 	    
 	  }
 	@Test
+	// test that tests if a thread can be cancelled and a new one stated without errors
 	  public void advancedTestSearch() throws FileNotFoundException, UnsupportedEncodingException, InterruptedException {
 	
+		// set up model and controller
 		model.setController(controller);
 		mySearchView.setController(controller);
 		controller.setModel(model);
@@ -87,6 +88,7 @@ public class StarTest {
 		
 		// interupted search
 	    // start one search then check to see if it tosses it when next one starts
+	    // we want it to find f2, not f1
 		model.SearchFor(f1);
 		model.SearchFor(f2);
 		model.t1.join();
@@ -106,15 +108,11 @@ public class StarTest {
 	}
 	
 	@Test
+	// test that tests to see if it can execute an executable
 	  public void executeTest() throws InterruptedException, IOException {
-		model.setController(controller);
-		mySearchView.setController(controller);
-		controller.setModel(model);
-		controller.setView(mySearchView);
 		
-	
-		//Process p = Runtime.getRuntime().exec("notepad.exe");
-		Process p = Runtime.getRuntime().exec("java -jar JunitExecTest.jar");
+		// try to execute a copy of notepad that is in the library
+		Process p = Runtime.getRuntime().exec("notepad.exe");
 		p.waitFor();
 		
 		// if programs come up, it works!
