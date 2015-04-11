@@ -36,9 +36,13 @@ public class STARmain implements NativeKeyListener {
 		boolean firstTime = true;
 		
 		// loads settings from an ini file
+		// makes sure it only would load setting on start up
 		if(firstTime == true) {
 			firstTime = false;
+			// create a file pointing to the ini file to make sure it exists or not
 			File tempFile = new File("STAR.ini");
+			// if the ini file does not exist, create one
+			// by using a printwriting and project agreed base options
 			if(!tempFile.exists()) {
 				PrintWriter writer = new PrintWriter("STAR.ini", "UTF-8");
 				writer.println("[basic options]");
@@ -47,6 +51,8 @@ public class STARmain implements NativeKeyListener {
 				writer.close();
 				System.out.println("I created a new ini file");
 			}
+			// once the ini file is found/created, load the options
+			// also, send the options to the model where the options will matter
 			Wini ini = new Wini(new File("STAR.ini"));
 			int dirDepth = ini.get("basic options","directory depth",int.class);
 			Boolean simpleMode = ini.get("basic options","simple mode",boolean.class);

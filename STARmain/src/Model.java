@@ -20,6 +20,7 @@ public class Model {
 	// function that runs the thread that will search for possible files
 	public void SearchFor(String fileNameToFind) throws InterruptedException {
 		
+		// set up a new runabble, which includes options and the file to find
 		run = new MyRunnable(fileNameToFind, this,dirDepth,simpleMode);
 		System.out.println("I started a new search");
 		
@@ -33,13 +34,15 @@ public class Model {
 
 	// sets a flag in the runnable that stops it (not instantaneous)
 	public void interruptSearch() throws InterruptedException {
+		// if the thread is dead, no need to beat a dead thread (horse)
 		if(t1.isAlive()) {
 			System.out.println("stopping");
 			run.terminate();
 			System.out.println("stop success");
 		}
 	}
-
+	
+	
 	public void setController(Controller c) {
 		controller = c;
 	}
@@ -48,11 +51,13 @@ public class Model {
 		return results;
 	}
 	
+	// setter method that is called by the thread/runnable whenever new results are found
 	public void setResults(ArrayList<File> newResults) {
 		results = newResults;
 		controller.refreshSearchResults(results);
 	}
 	
+	// method that attempt to execute a file
 	public void genericExecuteFile(File f) throws InterruptedException {
 		
 		// check to see if the file is 'executable'

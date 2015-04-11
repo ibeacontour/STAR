@@ -16,8 +16,6 @@ public class MyRunnable implements Runnable{
 
 	// 
 	public MyRunnable(String theFileToFind, Model theModel,int dD,boolean sM) {
-		// delete these when things start to work 
-		// just a demo arraylist to show that something can work
 		theFile = theFileToFind;
 		model = theModel;
 		dirDepth = dD;
@@ -31,7 +29,7 @@ public class MyRunnable implements Runnable{
 		stuff.clear();
 		//System.out.println("I get here");
 
-		// Here is the search stuff
+		// Here is the search algorithms
 		File[] roots;
 		File tempDir;
 		File[] inDir;
