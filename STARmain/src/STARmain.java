@@ -156,10 +156,10 @@ public class STARmain implements NativeKeyListener {
 		//implement state as per detected key
 		if (arg0.getKeyCode() == NativeKeyEvent.VC_CONTROL_L) {
 			controlState = 1;
-			System.out.println("control");
+			//System.out.println("control");
 		} else if (arg0.getKeyCode() == NativeKeyEvent.VC_SPACE) {
 			spaceState = 1;
-			System.out.println("space");
+			//System.out.println("space");
 		}
 		
 		//if both keys are down we will be in state 2 and show the form

@@ -1,6 +1,7 @@
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
@@ -150,6 +151,43 @@ public class view extends JFrame implements KeyListener {
 		//c.weighty = .10;
 		//add component
 		this.add(searchField, c);
+		searchField.addKeyListener(new KeyListener() {
+			
+			@Override
+			public void keyTyped(KeyEvent e) {
+				if (e.getKeyChar() == KeyEvent.VK_DOWN) {
+					if (results.getSelectedIndex() == -1) 
+						results.setSelectedIndex(0);
+					else if (results.getSelectedIndex() == (results.getComponentCount() - 1))
+						results.setSelectedIndex(0);
+					else {
+						results.setSelectedIndex(results.getSelectedIndex() + 1);
+					}
+				}
+				
+				if (e.getKeyChar() == KeyEvent.VK_UP) {
+					if (results.getSelectedIndex() == -1) 
+						results.setSelectedIndex(results.getComponentCount() - 1);
+					else if (results.getSelectedIndex() == 0)
+						results.setSelectedIndex(results.getComponentCount() - 1);
+					else {
+						results.setSelectedIndex(results.getSelectedIndex() - 1);
+					}
+				}
+			}
+			
+			@Override
+			public void keyReleased(KeyEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void keyPressed(KeyEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
 
 
 		TextPrompt testPrompt = new TextPrompt("Search", searchField);
@@ -269,11 +307,22 @@ public class view extends JFrame implements KeyListener {
 				imageLabel.setIcon(sIcon);
 				
 				//check for no results
-				if (listModel.getSize() > 0) {
+				if (listModel.getSize() == 1) {
+					if (listModel.get(0) instanceof String) {
+						String resultStr = (String)(listModel.get(0));
+						if (resultStr == "(Searching...)")
+						{
+							listModel.clear();
+							listModel.addElement("(No results found)");
+							results.setEnabled(false);
+						} else {
+							results.setEnabled(true);
+						}
+					} else {
+						results.setEnabled(true);
+					}
+				} else if (listModel.getSize() > 0) {
 					results.setEnabled(true);
-				} else {
-					listModel.addElement("(No results found.)");
-					results.setEnabled(false);
 				}
 			}
 		});
